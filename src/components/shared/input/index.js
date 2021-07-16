@@ -11,6 +11,7 @@ import {
 } from '../../../config/globals/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {styles} from './style';
+import {KeyboardType} from 'react-native';
 
 const Input = ({
   withIcon,
@@ -19,6 +20,8 @@ const Input = ({
   value,
   onChangeText,
   error,
+  secureTextEntry,
+  keyboardType,
 }: {
   withIcon?: boolean,
   placeholder?: string,
@@ -26,6 +29,8 @@ const Input = ({
   value?: string,
   onChangeText: (text?: string) => void,
   error?: string,
+  secureTextEntry?: boolean,
+  keyboardType?: KeyboardType,
 }) => {
   const parseColor = () => {
     if (error?.length > 0) {
@@ -55,6 +60,10 @@ const Input = ({
           onChangeText={onChangeText}
           placeholderTextColor={'rgba(165,165,165,0.66)'}
           style={styles.input(withIcon)}
+          autoCapitalize={'none'}
+          keyboardType={keyboardType}
+          importantForAutofill={'no'}
+          secureTextEntry={secureTextEntry}
         />
       </Pressable>
       <Text
