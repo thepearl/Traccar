@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
       width: withIcon ? '85%' : '100%',
       paddingHorizontal: withIcon
         ? widthPercentageToDP(1)
-        : widthPercentageToDP(5),
+        : widthPercentageToDP(0),
     };
   },
 });

@@ -33,8 +33,7 @@ const App = () => {
         iconName={'person'}
         onChangeText={text => handleTextChange(text, 'email')}
         placeholder={'Email'}
-        withIcon
-        error={'sqdqs'}
+        withIcon={true}
       />
       <Spacer height={heightPercentageToDP(2)} />
       <Input
@@ -44,7 +43,7 @@ const App = () => {
         placeholder={'Password'}
         withIcon
       />
-      <SvgButton text={'Se connecter'} />
+      <SvgButton disabled text={'Se connecter'} />
     </BaseView>
   );
 };
