@@ -2,8 +2,8 @@
  * @format
  * @flow strict-local
  */
-import Login from './src/screens/login/login';
 import React from 'react';
+import {Login} from './src/screens';
 
 const App = () => {
   /**************************************************/
