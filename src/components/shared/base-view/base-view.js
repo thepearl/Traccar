@@ -7,6 +7,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -27,13 +28,21 @@ const BaseView = ({
   withSvgBackground?: boolean,
 }) => {
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback style={{flex: 1}} onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         enabled={true}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={heightPercentageToDP(2)}>
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <StatusBar translucent backgroundColor={'transparent'} />
-        <View>{children}</View>
+        <View style={{flex: 1}}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+            fadingEdgeLength={100}
+            style={{flex: 1}}>
+            {children}
+          </ScrollView>
+        </View>
         {withSvgBackground && (
           <Image
             source={svgBackground}
