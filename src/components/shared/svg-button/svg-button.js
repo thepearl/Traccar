@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import {Image, ImageBackground, Text} from 'react-native';
+import {ImageBackground, Text} from 'react-native';
 import {svgButton} from '../../../assets/images';
 import {
   fontValue,
