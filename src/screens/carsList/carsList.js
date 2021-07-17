@@ -26,6 +26,7 @@ const CarsList = () => {
     <BaseView>
       <MapView
         style={{
+          position: 'absolute',
           height: heightPercentageToDP(100),
           width: widthPercentageToDP(100),
         }}
@@ -51,7 +52,7 @@ const CarsList = () => {
             },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
-            alignItems: 'center',
+            // alignItems: 'center',
             paddingHorizontal: widthPercentageToDP(4),
             overflow: 'hidden',
           }}>
@@ -93,26 +94,42 @@ const CarsList = () => {
               />
             </View>
           </View>
-          {/*<Spacer height={heightPercentageToDP(1)} />*/}
-          {/*<View*/}
-          {/*  style={{*/}
-          {/*    height: 2,*/}
-          {/*    backgroundColor: '#707070',*/}
-          {/*    width: '100%',*/}
-          {/*    opacity: 0.12,*/}
-          {/*  }}*/}
-          {/*/>*/}
-
-          <FlatList
-            data={[1, 2, 3, 4, 5]}
-            renderItem={() => {
-              return (
-                <TouchableWithoutFeedback>
-                  <Text>asdfasd </Text>
-                </TouchableWithoutFeedback>
-              );
+          <Spacer height={heightPercentageToDP(1)} />
+          <View
+            style={{
+              height: 2,
+              backgroundColor: '#707070',
+              width: '100%',
+              opacity: 0.12,
             }}
           />
+          <Spacer height={heightPercentageToDP(1)} />
+          {isExpanded && (
+            <FlatList
+              contentContainerStyle={{paddingBottom: heightPercentageToDP(3)}}
+              data={[1, 2, 3, 4, 5]}
+              ItemSeparatorComponent={() => (
+                <Spacer height={heightPercentageToDP(1)} />
+              )}
+              renderItem={() => {
+                return (
+                  <TouchableWithoutFeedback style={{width: '80%'}}>
+                    <View
+                      style={{
+                        backgroundColor: '#F2F2F2',
+                        height: heightPercentageToDP(7),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderRadius: 15,
+                        paddingHorizontal: widthPercentageToDP(3),
+                      }}>
+                      <Text>asdfasd </Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                );
+              }}
+            />
+          )}
         </Pressable>
         <Spacer style={{height: heightPercentageToDP(2)}} />
       </MapView>
