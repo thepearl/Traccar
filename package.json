@@ -5,6 +5,8 @@
   "scripts": {
     "android": "react-native run-android",
     "pods": "cd ios && pod install",
+    "clean": "cd android && ./gradlew clean",
+    "get-apk": "cd android && ./gradlew assembleRelease",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
