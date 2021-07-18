@@ -25,8 +25,10 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const CarDetails = () => {
+  const navigation = useNavigation();
   const [markers, setMarkers] = useState<
     Array<{
       latLong: {latitude: string, longitude: string},
@@ -82,6 +84,7 @@ const CarDetails = () => {
             flexDirection: 'row',
           }}>
           <Pressable
+            onPress={navigation.goBack}
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -199,7 +202,7 @@ const CarDetails = () => {
           style={{
             alignSelf: 'center',
             position: 'absolute',
-            top: heightPercentageToDP(27),
+            top: heightPercentageToDP(28),
             width: '80%',
             height: heightPercentageToDP(10),
           }}>
@@ -284,7 +287,7 @@ const CarDetails = () => {
             <Text
               style={{
                 fontWeight: '600',
-                color: 'red',
+                color: '#F70B0B',
                 fontSize: fontValue(14),
               }}>
               Stop engine
