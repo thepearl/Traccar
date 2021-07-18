@@ -23,9 +23,11 @@ import {svgBackground} from '../../../assets/images';
 const BaseView = ({
   children,
   withSvgBackground,
+  isScrollView,
 }: {
   children: Node,
   withSvgBackground?: boolean,
+  isScrollView?: boolean,
 }) => {
   return (
     <TouchableWithoutFeedback style={{flex: 1}} onPress={Keyboard.dismiss}>
@@ -35,13 +37,19 @@ const BaseView = ({
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <StatusBar translucent backgroundColor={'transparent'} />
         <View style={{flex: 1}}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            bounces={false}
-            fadingEdgeLength={100}
-            style={{flex: 1}}>
-            {children}
-          </ScrollView>
+          {isScrollView ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+              fadingEdgeLength={100}
+              style={{flex: 1}}>
+              {children}
+            </ScrollView>
+          ) : (
+            <View style={{flex: 1}} bounces={false} fadingEdgeLength={100}>
+              {children}
+            </View>
+          )}
         </View>
         {withSvgBackground && (
           <Image
@@ -49,8 +57,11 @@ const BaseView = ({
             style={{
               position: 'absolute',
               zIndex: -1,
-              resizeMode: 'cover',
-              height: heightPercentageToDP(100),
+              resizeMode: 'stretch',
+              height:
+                Platform.OS === 'android'
+                  ? heightPercentageToDP(100) + StatusBar.currentHeight
+                  : heightPercentageToDP(100),
               width: widthPercentageToDP(100),
             }}
           />

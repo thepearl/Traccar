@@ -23,8 +23,10 @@ import {
   View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
 
 const CarsList = () => {
+  const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [markers, setMarkers] = useState<
     Array<{
@@ -46,56 +48,56 @@ const CarsList = () => {
   ]);
 
   return (
-    <BaseView>
-      <MapView
-        initialRegion={{
-          latitude: 35.766545,
-          longitude: 10.801833,
-          longitudeDelta: 1,
-          latitudeDelta: 1,
-        }} //35.394305,9.535017
-        style={{
-          position: 'absolute',
-          height: heightPercentageToDP(100),
-          width: widthPercentageToDP(100),
-        }}
-        provider={PROVIDER_GOOGLE}>
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.latLong}
-            title={marker.title}
-            description={marker.description}>
-            <View
-              style={{
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
-              <FontAwesome5
-                style={{color: '#d11f1f'}}
-                size={fontValue(25)}
-                name={'map-marker-alt'}
-              />
+    <BaseView isScrollView={false}>
+      <View style={{flex: 1}}>
+        <MapView
+          initialRegion={{
+            latitude: 35.766545,
+            longitude: 10.801833,
+            longitudeDelta: 1,
+            latitudeDelta: 1,
+          }} //35.394305,9.535017
+          style={{
+            flex: 1,
+          }}
+          provider={PROVIDER_GOOGLE}>
+          {markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={marker.latLong}
+              title={marker.title}
+              description={marker.description}>
               <View
                 style={{
-                  backgroundColor: 'white',
-                  borderRadius: heightPercentageToDP(2),
-                  margin: heightPercentageToDP(1.5),
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}>
-                <Text
+                <FontAwesome5
+                  style={{color: '#d11f1f'}}
+                  size={fontValue(25)}
+                  name={'map-marker-alt'}
+                />
+                <View
                   style={{
-                    color: 'black',
-                    fontWeight: '600',
-                    fontSize: fontValue(10),
-                    padding: widthPercentageToDP(2),
+                    backgroundColor: 'white',
+                    borderRadius: heightPercentageToDP(2),
+                    margin: heightPercentageToDP(1.5),
                   }}>
-                  {marker.title}
-                </Text>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontWeight: '600',
+                      fontSize: fontValue(10),
+                      padding: widthPercentageToDP(2),
+                    }}>
+                    {marker.title}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </Marker>
-        ))}
+            </Marker>
+          ))}
+        </MapView>
         <View
           style={{
             width: '90%',
@@ -237,6 +239,7 @@ const CarsList = () => {
           <Spacer height={heightPercentageToDP(2)} />
           {isExpanded && (
             <FlatList
+              keyExtractor={item => item?.toString()}
               contentContainerStyle={{paddingBottom: heightPercentageToDP(3)}}
               data={[1, 2, 3, 4, 5]}
               ItemSeparatorComponent={() => (
@@ -244,7 +247,11 @@ const CarsList = () => {
               )}
               renderItem={() => {
                 return (
-                  <TouchableWithoutFeedback style={{width: '80%'}}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      navigation.navigate('car-details');
+                    }}
+                    style={{width: '80%'}}>
                     <View
                       style={{
                         backgroundColor: '#F2F2F2',
@@ -309,7 +316,7 @@ const CarsList = () => {
           )}
         </Pressable>
         <Spacer style={{height: heightPercentageToDP(2)}} />
-      </MapView>
+      </View>
     </BaseView>
   );
 };

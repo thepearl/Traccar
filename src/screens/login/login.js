@@ -16,6 +16,7 @@ import SvgButton from '../../components/shared/svg-button/svg-button';
 import {Image, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {mapIndicatorCar} from '../../assets/images';
 import CardWithMapIcon from '../../components/login/card-with-map-icon';
+import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {
   // State
@@ -25,6 +26,7 @@ const Login = () => {
   }>({email: '', password: ''});
   // Redux
   // local variables
+  const navigation = useNavigation();
   // Callbacks
   const handleTextChange = (text, name) => {
     setLoginState(prevState => {
@@ -85,7 +87,12 @@ const Login = () => {
         withIcon
       />
       <Spacer height={heightPercentageToDP(6)} />
-      <SvgButton text={'Se connecter'} />
+      <SvgButton
+        onPress={() => {
+          navigation.navigate('car-list');
+        }}
+        text={'Se connecter'}
+      />
     </BaseView>
   );
 };

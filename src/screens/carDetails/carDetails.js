@@ -17,6 +17,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  StatusBar,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -38,64 +39,37 @@ const CarDetails = () => {
       title: 'Monastir',
       desc: 'centre ville',
     },
-    {
-      latLong: {latitude: 35.766545, longitude: 10.5},
-      title: 'Sousse centre ville',
-      desc: 'Jammel',
-    },
   ]);
 
   return (
-    <BaseView>
-      <MapView
-        initialRegion={{
-          latitude: 35.766545,
-          longitude: 10.801833,
-          longitudeDelta: 1,
-          latitudeDelta: 1,
-        }} //35.394305,9.535017
-        style={{
-          position: 'absolute',
-          height: heightPercentageToDP(100),
-          width: widthPercentageToDP(100),
-        }}
-        provider={PROVIDER_GOOGLE}>
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.latLong}
-            title={marker.title}
-            description={marker.description}>
-            <View
-              style={{
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
+    <BaseView isScrollView={false}>
+      <View style={{flex: 1}}>
+        <MapView
+          initialRegion={{
+            latitude: 35.766545,
+            longitude: 10.801833,
+            longitudeDelta: 1,
+            latitudeDelta: 1,
+          }} //35.394305,9.535017
+          style={{
+            flex: 1,
+            minHeight: heightPercentageToDP(100) + StatusBar.currentHeight,
+          }}
+          provider={PROVIDER_GOOGLE}>
+          {markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={marker.latLong}
+              title={marker.title}
+              description={marker.description}>
               <FontAwesome5
-                style={{color: '#d11f1f'}}
+                style={{color: '#22A847'}}
                 size={fontValue(25)}
                 name={'map-marker-alt'}
               />
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: heightPercentageToDP(2),
-                  margin: heightPercentageToDP(1.5),
-                }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontWeight: '600',
-                    fontSize: fontValue(10),
-                    padding: widthPercentageToDP(2),
-                  }}>
-                  {marker.title}
-                </Text>
-              </View>
-            </View>
-          </Marker>
-        ))}
+            </Marker>
+          ))}
+        </MapView>
         <View
           style={{
             width: '90%',
@@ -113,6 +87,7 @@ const CarDetails = () => {
               justifyContent: 'center',
               height: heightPercentageToDP(5),
               width: heightPercentageToDP(5),
+              left: widthPercentageToDP(1),
               borderRadius: heightPercentageToDP(1.5),
               backgroundColor: 'white',
               shadowColor: '#000',
@@ -171,6 +146,7 @@ const CarDetails = () => {
                   width: 0,
                   height: 3,
                 },
+                left: widthPercentageToDP(5),
                 shadowOpacity: 0.27,
                 shadowRadius: 4.65,
                 elevation: 6,
@@ -223,7 +199,7 @@ const CarDetails = () => {
           style={{
             alignSelf: 'center',
             position: 'absolute',
-            top: heightPercentageToDP(20),
+            top: heightPercentageToDP(27),
             width: '80%',
             height: heightPercentageToDP(10),
           }}>
@@ -252,7 +228,70 @@ const CarDetails = () => {
             />
           </Pressable>
         </View>
-      </MapView>
+        <View
+          style={{
+            position: 'absolute',
+            height: heightPercentageToDP(20),
+            backgroundColor: 'white',
+            bottom: heightPercentageToDP(7),
+            width: '95%',
+            alignSelf: 'center',
+          }}>
+          <Text
+            style={{
+              opacity: 0.5,
+              paddingHorizontal: widthPercentageToDP(3),
+              paddingTop: heightPercentageToDP(1),
+              fontSize: fontValue(14),
+            }}>
+            Honda civic
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              position: 'absolute',
+              paddingVertical: heightPercentageToDP(1),
+              bottom: heightPercentageToDP(0),
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              alignSelf: 'center',
+              width: '100%',
+              backgroundColor: 'white',
+              elevation: 5,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              paddingHorizontal: widthPercentageToDP(5),
+            }}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: fontValue(14),
+              }}>
+              Replay history
+            </Text>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: fontValue(14),
+              }}>
+              Rapport.
+            </Text>
+            <Text
+              style={{
+                fontWeight: '600',
+                color: 'red',
+                fontSize: fontValue(14),
+              }}>
+              Stop engine
+            </Text>
+          </View>
+        </View>
+      </View>
     </BaseView>
   );
 };
