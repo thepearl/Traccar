@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<network-security-config>
+<base-config cleartextTrafficPermitted="true">
+    <trust-anchors>
+        <certificates src="system" />
+    </trust-anchors>
+</base-config>
+<domain-config cleartextTrafficPermitted="true">
+    <domain includeSubdomains="true">http://161.35.27.196:8082</domain>
+    <domain includeSubdomains="true">http://161.35.27.196:8082/api/devices</domain>
+</domain-config>
+</network-security-config>

@@ -108,6 +108,7 @@ const Login = () => {
         value={loginState.password}
         onChangeText={text => handleTextChange(text, 'password')}
         iconName={'lock-closed'}
+        secureTextEntry
         placeholder={'Password'}
         withIcon
       />
