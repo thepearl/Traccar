@@ -23,7 +23,7 @@ import {svgBackground} from '../../../assets/images';
 const BaseView = ({
   children,
   withSvgBackground,
-  isScrollView,
+  isScrollView = true,
 }: {
   children: Node,
   withSvgBackground?: boolean,
