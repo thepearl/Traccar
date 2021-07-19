@@ -14,14 +14,15 @@ import {
   widthPercentageToDP,
 } from '../../config/globals/styles';
 import {
-  FlatList,
-  Image,
-  Pressable,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+    FlatList,
+    Image,
+    Linking, Platform,
+    Pressable,
+    StatusBar,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -207,6 +208,19 @@ const CarDetails = () => {
             height: heightPercentageToDP(10),
           }}>
           <Pressable
+            onPress={() => {
+              const scheme = Platform.select({
+                ios: 'maps:0,0?q=',
+                android: 'geo:0,0?q=',
+              });
+              const latLng = `${35.766545},${10.801833}`; //35.766545, longitude: 10.801833
+              const label = 'Monastir';
+              const url = Platform.select({
+                ios: `${scheme}${label}@${latLng}`,
+                android: `${scheme}${latLng}(${label})`,
+              });
+              Linking.openURL(url);
+            }}
             style={{
               alignItems: 'center',
               justifyContent: 'center',

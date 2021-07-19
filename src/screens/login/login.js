@@ -17,6 +17,16 @@ import {Image, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {mapIndicatorCar} from '../../assets/images';
 import CardWithMapIcon from '../../components/login/card-with-map-icon';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import {decode, encode} from 'base-64';
+
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
 
 const Login = () => {
   // State
@@ -36,6 +46,21 @@ const Login = () => {
       };
     });
   };
+  //Axios
+  function loginService() {
+    axios({
+      url: 'http://161.35.27.196:8082/api/devices',
+      auth: {username: loginState.email, password: loginState.password},
+    })
+      .then(res => {
+        console.log(res.data);
+        navigation.navigate('car-list');
+      })
+      .catch(error => {
+        console.log(error);
+        alert('Veuillez vérifier vos coordonnées');
+      });
+  }
   /**************************************************/
   return (
     <BaseView withSvgBackground>
@@ -89,7 +114,7 @@ const Login = () => {
       <Spacer height={heightPercentageToDP(6)} />
       <SvgButton
         onPress={() => {
-          navigation.navigate('car-list');
+          loginService();
         }}
         text={'Se connecter'}
       />
