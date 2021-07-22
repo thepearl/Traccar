@@ -14,64 +14,52 @@ import {
   widthPercentageToDP,
 } from '../../config/globals/styles';
 import {
-    FlatList,
-    Image,
-    Linking, Platform,
-    Pressable,
-    StatusBar,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  FlatList,
+  Image,
+  Linking,
+  Platform,
+  Pressable,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 
-const CarDetails = () => {
+const CarDetails = ({route}) => {
+  const device = route?.params?.deviceObject;
   const navigation = useNavigation();
-  const [markers, setMarkers] = useState<
-    Array<{
-      latLong: {latitude: string, longitude: string},
-      title: string,
-      desc: string,
-    }>,
-  >([
-    {
-      latLong: {latitude: 35.766545, longitude: 10.801833},
-      title: 'Monastir',
-      desc: 'centre ville',
-    },
-  ]);
-
   return (
     <BaseView isScrollView={false}>
       <View style={{flex: 1}}>
         <MapView
           initialRegion={{
-            latitude: 35.766545,
-            longitude: 10.801833,
-            longitudeDelta: 1,
+            longitude: device?.longitude,
+            latitude: device?.latitude,
             latitudeDelta: 1,
-          }} //35.394305,9.535017
+            longitudeDelta: 1,
+          }}
           style={{
             flex: 1,
             minHeight: heightPercentageToDP(100) + StatusBar.currentHeight,
           }}
           provider={PROVIDER_GOOGLE}>
-          {markers.map((marker, index) => (
-            <Marker
-              key={index}
-              coordinate={marker.latLong}
-              title={marker.title}
-              description={marker.description}>
-              <FontAwesome5
-                style={{color: '#22A847'}}
-                size={fontValue(25)}
-                name={'map-marker-alt'}
-              />
-            </Marker>
-          ))}
+          <Marker
+            coordinate={{
+              longitude: device.longitude,
+              latitude: device.latitude,
+            }}>
+            <FontAwesome5
+              style={{
+                color: device.status === 'offline' ? '#d11f1f' : '#259f12',
+              }}
+              size={fontValue(25)}
+              name={'map-marker-alt'}
+            />
+          </Marker>
         </MapView>
         <View
           style={{
@@ -213,8 +201,8 @@ const CarDetails = () => {
                 ios: 'maps:0,0?q=',
                 android: 'geo:0,0?q=',
               });
-              const latLng = `${35.766545},${10.801833}`; //35.766545, longitude: 10.801833
-              const label = 'Monastir';
+              const latLng = `${device.latitude},${device.longitude}`;
+              const label = device.name;
               const url = Platform.select({
                 ios: `${scheme}${label}@${latLng}`,
                 android: `${scheme}${latLng}(${label})`,
@@ -261,7 +249,7 @@ const CarDetails = () => {
               paddingTop: heightPercentageToDP(1),
               fontSize: fontValue(14),
             }}>
-            Honda civic
+            {device.name}
           </Text>
           <View
             style={{
@@ -289,7 +277,7 @@ const CarDetails = () => {
                 fontWeight: '600',
                 fontSize: fontValue(14),
               }}>
-              Replay history
+              Historiques
             </Text>
             <Text
               style={{
@@ -304,7 +292,7 @@ const CarDetails = () => {
                 color: '#F70B0B',
                 fontSize: fontValue(14),
               }}>
-              Stop engine
+              Arrêter moteur
             </Text>
           </View>
         </View>

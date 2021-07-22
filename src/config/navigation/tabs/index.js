@@ -20,6 +20,7 @@ const Tabs = createBottomTabNavigator();
 const Tab = () => {
   return (
     <Tabs.Navigator
+      initialRouteName={'search'}
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color}) => {
           let imageName;

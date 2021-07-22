@@ -2,7 +2,7 @@
  * @format
  * @flow strict-local
  */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {BaseView, Spacer} from '../../components/shared';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,49 +24,67 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 
 const CarsList = () => {
   const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [markers, setMarkers] = useState<
-    Array<{
-      latLong: {latitude: string, longitude: string},
-      title: string,
-      desc: string,
-    }>,
-  >([
-    {
-      latLong: {latitude: 35.766545, longitude: 10.801833},
-      title: 'Monastir',
-      desc: 'centre ville',
-    },
-    {
-      latLong: {latitude: 35.766545, longitude: 10.5},
-      title: 'Sousse centre ville',
-      desc: 'Jammel',
-    },
-  ]);
+  const [loginState, setLoginState] = useState<{
+    email: string,
+    password: string,
+  }>({email: 'admin', password: 'admin'});
+  const [carList, setCarList] = useState<Array<CarModel>>([]);
+  const [deviceList, setDeviceList] = useState<Array<DeviceModel>>([]);
 
+  //Axios
+  function getCarsList() {
+    axios({
+      url: 'http://161.35.27.196:8082/api/positions',
+      auth: {username: loginState.email, password: loginState.password},
+      headers: {},
+    })
+      .then(res => {
+        console.log(res.data);
+        setCarList(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function getDevicesList() {
+    axios({
+      url: 'http://161.35.27.196:8082/api/devices',
+      auth: {username: loginState.email, password: loginState.password},
+      headers: {},
+    })
+      .then(res => {
+        console.log(res.data);
+        setDeviceList(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  useEffect(() => {
+    getCarsList();
+    getDevicesList();
+  }, []);
   return (
     <BaseView isScrollView={false}>
       <View style={{flex: 1}}>
         <MapView
-          initialRegion={{
-            latitude: 35.766545,
-            longitude: 10.801833,
-            longitudeDelta: 1,
-            latitudeDelta: 1,
-          }} //35.394305,9.535017
           style={{
             flex: 1,
           }}
           provider={PROVIDER_GOOGLE}>
-          {markers.map((marker, index) => (
+          {carList.map((marker: CarModel, index) => (
             <Marker
               key={index}
-              coordinate={marker.latLong}
-              title={marker.title}
-              description={marker.description}>
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}>
               <View
                 style={{
                   justifyContent: 'center',
@@ -74,7 +92,14 @@ const CarsList = () => {
                   alignItems: 'center',
                 }}>
                 <FontAwesome5
-                  style={{color: '#d11f1f'}}
+                  style={{
+                    color:
+                      deviceList.filter(
+                        device => device.id === marker.deviceId,
+                      )?.[0]?.status === 'offline'
+                        ? '#d11f1f'
+                        : '#259f12',
+                  }}
                   size={fontValue(25)}
                   name={'map-marker-alt'}
                 />
@@ -91,7 +116,11 @@ const CarsList = () => {
                       fontSize: fontValue(10),
                       padding: widthPercentageToDP(2),
                     }}>
-                    {marker.title}
+                    {
+                      deviceList.filter(
+                        device => device.id === marker.deviceId,
+                      )?.[0]?.name
+                    }
                   </Text>
                 </View>
               </View>
@@ -223,7 +252,7 @@ const CarsList = () => {
               <Ionicons
                 style={{fontSize: fontValue(13)}}
                 color={'#F86439'}
-                name={isExpanded ? 'caret-up-outline' : 'caret-down-outline'}
+                name={isExpanded ? 'caret-down-outline': 'caret-up-outline'}
               />
             </View>
           </View>
@@ -241,15 +270,22 @@ const CarsList = () => {
             <FlatList
               keyExtractor={item => item?.toString()}
               contentContainerStyle={{paddingBottom: heightPercentageToDP(3)}}
-              data={[1, 2, 3, 4, 5]}
+              data={carList}
               ItemSeparatorComponent={() => (
                 <Spacer height={heightPercentageToDP(1)} />
               )}
-              renderItem={() => {
+              renderItem={({item}: CarModel) => {
                 return (
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      navigation.navigate('car-details');
+                      navigation.navigate('car-details', {
+                        deviceObject: {
+                          ...item,
+                          ...deviceList.filter(
+                            device => device.id === item?.deviceId,
+                          )?.[0],
+                        },
+                      });
                     }}
                     style={{width: '80%'}}>
                     <View
@@ -264,7 +300,12 @@ const CarsList = () => {
                       <View
                         style={{
                           height: 25,
-                          backgroundColor: '#d11f1f', // green #259f12
+                          backgroundColor:
+                            deviceList.filter(
+                              device => device.id === item.deviceId,
+                            )?.[0]?.status === 'offline'
+                              ? '#d11f1f'
+                              : '#259f12',
                           width: 25,
                           borderRadius: 13,
                         }}
@@ -291,7 +332,7 @@ const CarsList = () => {
                               color: '#9F9F9F',
                               fontWeight: '700',
                             }}>
-                            0km/h
+                            {(item?.speed ? item.speed : '0') + ' km/h'}
                           </Text>
                           <Text
                             style={{
@@ -299,7 +340,9 @@ const CarsList = () => {
                               color: '#9F9F9F',
                               fontWeight: '700',
                             }}>
-                            0km
+                            {(item?.attributes?.totalDistance
+                              ? item?.attributes?.totalDistance
+                              : '0') + ' km'}
                           </Text>
                         </View>
                         <FontAwesome
@@ -322,3 +365,47 @@ const CarsList = () => {
 };
 
 export default CarsList;
+
+interface CarModel {
+  accuracy: number;
+  address: string;
+  altitude: number;
+  attributes: {
+    batteryLevel: number,
+    distance: number,
+    motion: boolean,
+    totalDistance: number,
+  };
+
+  course: number;
+  deviceId: number;
+  deviceTime: string;
+  fixTime: string;
+  id: number;
+  latitude: number;
+  longitude: number;
+  network: string;
+  outdated: boolean;
+  protocol: string;
+  serverTime: string;
+  speed: number;
+  type: any;
+  valid: boolean;
+}
+
+interface DeviceModel {
+  id: number;
+  name: string;
+  uniqueId: string;
+  status: string;
+  disabled: boolean;
+  lastUpdate: string;
+  positionId: number;
+  groupId: number;
+  phone: string;
+  model: string;
+  contact: string;
+  category: string;
+  geofenceIds: [];
+  attributes: {};
+}
