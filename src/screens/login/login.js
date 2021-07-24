@@ -114,6 +114,7 @@ const Login = () => {
       />
       <Spacer height={heightPercentageToDP(6)} />
       <SvgButton
+        disabled={!loginState.email || !loginState.password}
         onPress={() => {
           loginService();
         }}

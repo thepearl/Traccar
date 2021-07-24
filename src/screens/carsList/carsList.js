@@ -80,6 +80,7 @@ const CarsList = () => {
           provider={PROVIDER_GOOGLE}>
           {carList.map((marker: CarModel, index) => (
             <Marker
+              anchor={{x: 0.5, y: 0.5}}
               key={index}
               coordinate={{
                 latitude: marker.latitude,
@@ -93,6 +94,7 @@ const CarsList = () => {
                 }}>
                 <FontAwesome5
                   style={{
+                    paddingBottom: heightPercentageToDP(0.5),
                     color:
                       deviceList.filter(
                         device => device.id === marker.deviceId,
@@ -107,12 +109,13 @@ const CarsList = () => {
                   style={{
                     backgroundColor: 'white',
                     borderRadius: heightPercentageToDP(2),
-                    margin: heightPercentageToDP(1.5),
                   }}>
                   <Text
                     style={{
                       color: 'black',
                       fontWeight: '600',
+                      textAlign: 'center',
+                      minWidth: widthPercentageToDP(15),
                       fontSize: fontValue(10),
                       padding: widthPercentageToDP(2),
                     }}>
@@ -138,30 +141,7 @@ const CarsList = () => {
             justifyContent: 'space-between',
             flexDirection: 'row',
           }}>
-          <Pressable
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: heightPercentageToDP(5),
-              width: heightPercentageToDP(5),
-              borderRadius: heightPercentageToDP(1),
-              backgroundColor: 'transparent',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowOpacity: 0.27,
-              shadowRadius: 4.65,
-              elevation: 6,
-            }}>
-            {/*<Ionicons*/}
-            {/*  style={{*/}
-            {/*    fontSize: fontValue(20),*/}
-            {/*  }}*/}
-            {/*  name={'ios-chevron-back'}*/}
-            {/*/>*/}
-          </Pressable>
+          <View />
           <Pressable
             style={{
               alignItems: 'center',
@@ -250,7 +230,7 @@ const CarsList = () => {
               <Ionicons
                 style={{fontSize: fontValue(13)}}
                 color={'#F86439'}
-                name={isExpanded ? 'caret-down-outline': 'caret-up-outline'}
+                name={isExpanded ? 'caret-down-outline' : 'caret-up-outline'}
               />
             </View>
           </View>
