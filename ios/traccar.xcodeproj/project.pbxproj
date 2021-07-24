@@ -91,7 +91,6 @@
 				BD7BC2971F8BE31DA96D8021 /* Pods-traccar-traccarTests.debug.xcconfig */,
 				EA4A2F416AEC8EB24CB18B68 /* Pods-traccar-traccarTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

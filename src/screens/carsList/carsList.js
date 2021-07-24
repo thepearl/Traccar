@@ -144,9 +144,8 @@ const CarsList = () => {
               justifyContent: 'center',
               height: heightPercentageToDP(5),
               width: heightPercentageToDP(5),
-
               borderRadius: heightPercentageToDP(1),
-              backgroundColor: 'white',
+              backgroundColor: 'transparent',
               shadowColor: '#000',
               shadowOffset: {
                 width: 0,
@@ -154,15 +153,14 @@ const CarsList = () => {
               },
               shadowOpacity: 0.27,
               shadowRadius: 4.65,
-
               elevation: 6,
             }}>
-            <Ionicons
-              style={{
-                fontSize: fontValue(20),
-              }}
-              name={'ios-chevron-back'}
-            />
+            {/*<Ionicons*/}
+            {/*  style={{*/}
+            {/*    fontSize: fontValue(20),*/}
+            {/*  }}*/}
+            {/*  name={'ios-chevron-back'}*/}
+            {/*/>*/}
           </Pressable>
           <Pressable
             style={{
