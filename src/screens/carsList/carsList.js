@@ -77,6 +77,12 @@ const CarsList = () => {
           style={{
             flex: 1,
           }}
+          initialRegion={{
+            latitude: 34.3222975,
+            longitude: 11.7794371,
+            longitudeDelta: 30,
+            latitudeDelta: 30,
+          }}
           provider={PROVIDER_GOOGLE}>
           {carList.map((marker: CarModel, index) => (
             <Marker
