@@ -2,7 +2,7 @@
  * @format
  * @flow strict-local
  */
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {BaseView, Spacer} from '../../components/shared';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -23,7 +23,7 @@ import {
   View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
 
 const CarsList = () => {
@@ -35,7 +35,7 @@ const CarsList = () => {
   }>({email: 'admin', password: 'admin'});
   const [carList, setCarList] = useState<Array<CarModel>>([]);
   const [deviceList, setDeviceList] = useState<Array<DeviceModel>>([]);
-
+  const timeout = useRef();
   //Axios
   function getCarsList() {
     axios({
@@ -66,10 +66,25 @@ const CarsList = () => {
         console.log(error);
       });
   }
-  useEffect(() => {
-    getCarsList();
-    getDevicesList();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCarsList();
+      getDevicesList();
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      timeout.current = setInterval(() => {
+        getCarsList();
+        getDevicesList();
+      }, 10000);
+
+      return () => {
+        clearTimeout(timeout.current);
+      };
+    }, []),
+  );
   return (
     <BaseView isScrollView={false}>
       <View style={{flex: 1}}>
