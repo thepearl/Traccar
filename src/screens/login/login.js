@@ -101,7 +101,6 @@ const Login = () => {
         onChangeText={text => handleTextChange(text, 'email')}
         placeholder={'Email'}
         withIcon
-        // error={'sqdqs'}
       />
       <Spacer height={heightPercentageToDP(2)} />
       <Input

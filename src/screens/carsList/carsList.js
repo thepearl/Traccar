@@ -94,9 +94,9 @@ const CarsList = () => {
           }}
           initialRegion={{
             latitude: 34.3222975,
-            longitude: 11.7794371,
-            longitudeDelta: 30,
-            latitudeDelta: 30,
+            longitude: 10.0,
+            longitudeDelta: 8,
+            latitudeDelta: 8,
           }}
           provider={PROVIDER_GOOGLE}>
           {carList.map((marker: CarModel, index) => (

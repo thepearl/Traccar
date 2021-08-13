@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import {ImageBackground, Pressable, Text} from 'react-native';
+import {ImageBackground, Pressable, Text, TouchableOpacity} from 'react-native';
 import {svgButton} from '../../../assets/images';
 import {
   fontValue,
@@ -23,7 +23,11 @@ const SvgButton = ({
 }) => {
   return (
     <>
-      <Pressable disabled={disabled} onPress={onPress}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={{width: widthPercentageToDP(50), alignSelf: 'center'}}
+        disabled={disabled}
+        onPress={onPress}>
         <ImageBackground
           resizeMode={'stretch'}
           style={{
@@ -44,7 +48,7 @@ const SvgButton = ({
             {text}
           </Text>
         </ImageBackground>
-      </Pressable>
+      </TouchableOpacity>
     </>
   );
 };
