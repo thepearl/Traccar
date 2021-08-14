@@ -3,12 +3,21 @@
  * @flow strict-local
  */
 import React from 'react';
-import {Login} from './src/screens';
-import CarsList from './src/screens/carsList/carsList';
 import Stack from './src/config/navigation/stack';
+import {Provider} from 'react-redux';
+import {persistor, store} from './src/redux/store';
+import {PersistGate} from 'redux-persist/integration/react';
 
 const App = () => {
   /**************************************************/
-  return <Stack />;
+  return (
+    <>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <Stack />
+        </PersistGate>
+      </Provider>
+    </>
+  );
 };
 export default App;

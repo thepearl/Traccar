@@ -2,7 +2,7 @@
  * @format
  * @flow strict-local
  */
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {BaseView, Spacer} from '../../components/shared';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -27,11 +27,69 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import type {CarModel, DeviceModel} from '../carsList/carsList';
 
 const CarDetails = ({route}) => {
   const device = route?.params?.deviceObject;
   const navigation = useNavigation();
+  const [loginState, setLoginState] = useState<{
+    email: string,
+    password: string,
+  }>({email: 'admin', password: 'admin'});
+  const [carList, setCarList] = useState<Array<CarModel>>([]);
+  const [deviceList, setDeviceList] = useState<Array<DeviceModel>>([]);
+  const timeout = useRef();
+  //Axios
+  function getCarsList() {
+    axios({
+      url: 'http://161.35.27.196:8082/api/positions',
+      auth: {username: loginState.email, password: loginState.password},
+      headers: {},
+    })
+      .then(res => {
+        console.log(res.data);
+        setCarList(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  function getDevicesList() {
+    axios({
+      url: 'http://161.35.27.196:8082/api/devices',
+      auth: {username: loginState.email, password: loginState.password},
+      headers: {},
+    })
+      .then(res => {
+        console.log(res.data);
+        setDeviceList(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  useFocusEffect(
+    useCallback(() => {
+      getCarsList();
+      getDevicesList();
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      timeout.current = setInterval(() => {
+        getCarsList();
+        getDevicesList();
+      }, 10000);
+
+      return () => {
+        clearTimeout(timeout.current);
+      };
+    }, []),
+  );
   return (
     <BaseView isScrollView={false}>
       <View style={{flex: 1}}>
@@ -39,27 +97,39 @@ const CarDetails = ({route}) => {
           initialRegion={{
             longitude: device?.longitude,
             latitude: device?.latitude,
-            latitudeDelta: 1,
-            longitudeDelta: 1,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
           }}
           style={{
             flex: 1,
             minHeight: heightPercentageToDP(100) + StatusBar.currentHeight,
           }}
           provider={PROVIDER_GOOGLE}>
-          <Marker
-            coordinate={{
-              longitude: device.longitude,
-              latitude: device.latitude,
-            }}>
-            <FontAwesome5
-              style={{
-                color: device.status === 'offline' ? '#d11f1f' : '#259f12',
-              }}
-              size={fontValue(25)}
-              name={'map-marker-alt'}
-            />
-          </Marker>
+          {carList.map(car => {
+            console.log('device', device);
+            console.log(car);
+            if (car.deviceId === device.id) {
+              return (
+                <Marker
+                  anchor={{x: 0.5, y: 0.5}}
+                  coordinate={{
+                    longitude: device.longitude,
+                    latitude: device.latitude,
+                    latitudeDelta: 0.1,
+                    longitudeDelta: 0.1,
+                  }}>
+                  <FontAwesome5
+                    style={{
+                      color:
+                        device.status === 'offline' ? '#d11f1f' : '#259f12',
+                    }}
+                    size={fontValue(25)}
+                    name={'map-marker-alt'}
+                  />
+                </Marker>
+              );
+            }
+          })}
         </MapView>
         <View
           style={{

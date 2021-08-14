@@ -365,7 +365,7 @@ const CarsList = () => {
 
 export default CarsList;
 
-interface CarModel {
+export interface CarModel {
   accuracy: number;
   address: string;
   altitude: number;
@@ -392,7 +392,7 @@ interface CarModel {
   valid: boolean;
 }
 
-interface DeviceModel {
+export interface DeviceModel {
   id: number;
   name: string;
   uniqueId: string;

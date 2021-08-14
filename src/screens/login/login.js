@@ -6,19 +6,18 @@ import React from 'react';
 import {useState} from 'react';
 import {BaseView} from '../../components/shared/base-view';
 import {Spacer} from '../../components/shared/spacer';
-import {
-  fontValue,
-  heightPercentageToDP,
-  widthPercentageToDP,
-} from '../../config/globals/styles';
+import {fontValue, heightPercentageToDP} from '../../config/globals/styles';
 import Input from '../../components/shared/input';
 import SvgButton from '../../components/shared/svg-button/svg-button';
-import {Image, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {mapIndicatorCar} from '../../assets/images';
+import {Text, View} from 'react-native';
 import CardWithMapIcon from '../../components/login/card-with-map-icon';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {decode, encode} from 'base-64';
+import {useDispatch} from 'react-redux';
+import LOADING from '../../redux/actions/loading/action-types';
+import {FINISH_LOADING, START_LOADING} from '../../redux/actions/loading';
+import {LOGIN} from '../../redux/actions/auth';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -35,6 +34,7 @@ const Login = () => {
     password: string,
   }>({email: '', password: ''});
   // Redux
+  const dispatch = useDispatch();
   // local variables
   const navigation = useNavigation();
   // Callbacks
@@ -48,17 +48,23 @@ const Login = () => {
   };
   //Axios
   function loginService() {
+    dispatch(START_LOADING());
     axios({
       url: 'http://161.35.27.196:8082/api/devices',
       auth: {username: loginState.email, password: loginState.password},
     })
       .then(res => {
         console.log(res.data);
-        navigation.navigate('car-list');
+        dispatch(FINISH_LOADING());
+        dispatch(LOGIN());
+        navigation.dispatch(StackActions.replace('car-list'));
       })
       .catch(error => {
         console.log(error);
-        alert('Veuillez vérifier vos coordonnées');
+        dispatch(FINISH_LOADING());
+        setTimeout(() => {
+          alert('Veuillez vérifier vos coordonnées');
+        }, 500);
       });
   }
   /**************************************************/
